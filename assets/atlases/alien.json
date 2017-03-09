@@ -1,0 +1,120 @@
+{"frames": [
+
+{
+	"filename": "alien_climb1",
+	"frame": {"x":1,"y":1,"w":82,"h":102},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":90,"w":82,"h":102},
+	"sourceSize": {"w":96,"h":192},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "alien_climb2",
+	"frame": {"x":1,"y":105,"w":82,"h":102},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":90,"w":82,"h":102},
+	"sourceSize": {"w":96,"h":192},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "alien_duck",
+	"frame": {"x":1,"y":209,"w":87,"h":89},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":103,"w":87,"h":89},
+	"sourceSize": {"w":96,"h":192},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "alien_front",
+	"frame": {"x":1,"y":300,"w":81,"h":102},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":90,"w":81,"h":102},
+	"sourceSize": {"w":96,"h":192},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "alien_hit",
+	"frame": {"x":1,"y":404,"w":86,"h":103},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":89,"w":86,"h":103},
+	"sourceSize": {"w":96,"h":192},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "alien_hit_flash",
+	"frame": {"x":1,"y":509,"w":86,"h":103},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":89,"w":86,"h":103},
+	"sourceSize": {"w":96,"h":192},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "alien_jump",
+	"frame": {"x":1,"y":614,"w":84,"h":104},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":88,"w":84,"h":104},
+	"sourceSize": {"w":96,"h":192},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "alien_stand",
+	"frame": {"x":1,"y":720,"w":83,"h":100},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":92,"w":83,"h":100},
+	"sourceSize": {"w":96,"h":192},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "alien_swim1",
+	"frame": {"x":1,"y":822,"w":86,"h":106},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":86,"w":86,"h":106},
+	"sourceSize": {"w":96,"h":192},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "alien_swim2",
+	"frame": {"x":1,"y":930,"w":86,"h":108},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":84,"w":86,"h":108},
+	"sourceSize": {"w":96,"h":192},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "alien_walk1",
+	"frame": {"x":1,"y":1040,"w":84,"h":103},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":89,"w":84,"h":103},
+	"sourceSize": {"w":96,"h":192},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "alien_walk2",
+	"frame": {"x":1,"y":1145,"w":86,"h":106},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":86,"w":86,"h":106},
+	"sourceSize": {"w":96,"h":192},
+	"pivot": {"x":0.5,"y":0.5}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "alien.png",
+	"format": "RGBA8888",
+	"size": {"w":89,"h":1252},
+	"scale": "0.75",
+	"smartupdate": "$TexturePacker:SmartUpdate:5038d58cf82e3906f218ac415ec0deb9:53b1c137ecd5abd5d7c49334ab4fd7f6:f5c2820dc1d6657fd77f91f373566390$"
+}
+}
