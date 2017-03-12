@@ -30,7 +30,7 @@ var playState = {
             this.leveldata['map_height']);
         this.background = game.add.tileSprite(0, 0, this.leveldata['map_width'], 
             this.leveldata['map_height'], backgrounds[this.level_index]);
-        game.sound.play(music[this.level_index], 8, true);
+        game.sound.play(music[this.level_index], 5, true);
         game.physics.arcade.gravity.y = this.gravity;
         
         
@@ -404,6 +404,7 @@ var playState = {
     launchFireball: function(){
         if (this.krystal.hasFireballs === true){
             this.fireballs.fire();
+            game.sound.play('fireballSound', 4, false);
             this.krystal.throwingFireball = true;
             game.time.events.add(150, this.doneLaunchingFireball, this);
         }
@@ -656,6 +657,7 @@ var playState = {
 
     pickupFireball: function(krystal, fireball){
         krystal.hasFireballs = true;
+        game.sound.play('pickup', 2, false);
         fireball.destroy();
     },
 
@@ -673,6 +675,7 @@ var playState = {
     
     takeKey:  function(krystal, obj2){
         krystal.hasKey = true;
+        game.sound.play('pickup', 2, false);
         obj2.destroy();
     },
     
@@ -704,6 +707,7 @@ var playState = {
     
     getBalloon: function(krystal, balloon){
         krystal.hasBalloon = true;
+        game.sound.play('pickup', 2, false);
         balloon.destroy();
     },
     
@@ -745,7 +749,7 @@ var playState = {
             emitter.y = krystal.body.position.y;
             emitter.minParticleSpeed.setTo(-400, -400);
             emitter.start(true, 4000, null, 100);
-            game.sound.play('lose', 1, false);
+            game.sound.play('krystalDieSound', 10, false);
 
             krystal.alive = false; 
             game.time.events.add(2000, playState.reload, this);
@@ -791,7 +795,7 @@ var playState = {
     
     jumpHandler: function(){
         if (this.krystal.body.onFloor()){ 
-                game.sound.play('jump', 3, false);
+                game.sound.play('jump', 1, false);
             }
     },
     

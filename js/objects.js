@@ -203,7 +203,7 @@ Ghost.prototype.attack = function(krystal){
     if (((krystal.position.x < this.position.x) && (krystal.scale.x === -1)) ||
             ((krystal.position.x > this.position.x) && (krystal.scale.x === 1))){
         this.animations.play('attack_ghost', 1, true);
-        game.physics.arcade.accelerateToObject(this, krystal, 250)
+        game.physics.arcade.accelerateToObject(this, krystal, 250, 260, 260)
     } else {
         this.animations.play('idle_ghost', 1, true);
         this.body.velocity.x = 0;
@@ -243,7 +243,12 @@ Alien = function (game, x, y) {
     this.alienweapon.bulletGravity.y = -2000;
     this.alienweapon.fireRate = 2000;
     this.alienweapon.fireAngle = Phaser.ANGLE_LEFT;
+    this.alienweapon.onFire.add(this.fireSound, this)
     this.alienweapon.setBulletBodyOffset(30, 10, 18, 30);
+
+    this.emitter = game.add.emitter(0, 0, 1000);
+    this.emitter.makeParticles('star');
+    this.emitter.gravity = -2000;
 };
 
 Alien.prototype = Object.create(Phaser.Sprite.prototype);
@@ -251,7 +256,12 @@ Alien.prototype.constructor = Alien;
 Alien.prototype.getHit = function(){
     this.isHit = true;
     this.health -= 1;
+    game.sound.play('alienSound', 8, false)
     game.time.events.add(300, this.notHit, this);
+}
+
+Alien.prototype.fireSound = function(){
+    game.sound.play('laser', 8, false);
 }
 
 Alien.prototype.notHit = function(){
@@ -291,6 +301,11 @@ Alien.prototype.update = function(){
         }
 
         if (this.health <= 0){
+            game.sound.play('mediumExplosion', 5, false);
+            this.emitter.x = this.body.position.x;
+            this.emitter.y = this.body.position.y;
+            this.emitter.minParticleSpeed.setTo(-400, -400);
+            this.emitter.start(true, 4000, null, 100);
             this.destroy(true);
             this.alienweapon.destroy();
         }

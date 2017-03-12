@@ -76,14 +76,18 @@ var loadState = {
         game.load.audio('ghostMusic', 'assets/sounds/Mission Plausible.ogg' + version);
         game.load.audio('die', 'assets/sounds/zapThreeToneDown.ogg' + version);
         game.load.audio('menuTheme', 'assets/sounds/Flowing Rocks.ogg' + version);
-        game.load.audio('lose', 'assets/sounds/lose1.ogg' + version);
+        game.load.audio('krystalDieSound', 'assets/sounds/krystalDieSound.ogg' + version);
         game.load.audio('jump', 'assets/sounds/jump1.ogg' + version);
         game.load.audio('enemyStompSound', 'assets/sounds/creature2.ogg' + version);
         game.load.audio('coinCollect', ['assets/sounds/coinCollect.ogg' + version, 
             'assets/sounds/coinCollect.m4a' + version]);
         game.load.audio('powerUp', 'assets/sounds/powerUp8.ogg' + version);
-        
-        
+        game.load.audio('laser', 'assets/sounds/laser5.ogg' + version);
+        game.load.audio('alienSound', 'assets/sounds/creature1.ogg' + version);
+        game.load.audio('mediumExplosion', 'assets/sounds/mediumExplosion.ogg' + version);
+        game.load.audio('pickup', 'assets/sounds/pickup5.ogg' + version);
+        game.load.audio('fireballSound', 'assets/sounds/fireballSound.ogg' + version);
+
         // Load fonts
         game.load.bitmapFont('nokia',
             'assets/nokia16black.png' + version,
@@ -97,7 +101,7 @@ var loadState = {
     create: function() {
         
 //        game.state.start('menu');
-        game.state.start('lives', true, false, 0, 5, 0);
+        game.state.start('lives', true, false, 3, 99, 0);
     },
 
     loadComplete: function(){
