@@ -1,5 +1,5 @@
 
-var gameWidth = 800;
+var gameWidth = 768;
 var gameHeight = 512;
 var worldWidth = 1000; // these are arbitrary and 
 var worldHeight = 1000; // will be reset for each level

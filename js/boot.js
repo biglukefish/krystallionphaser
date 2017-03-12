@@ -7,13 +7,13 @@
  * key can be passed around to the various state objects.
  */
 
-var version = '?201703072258'  // used to trick browser's cache into loading the file every time.  Appended
+var version = '?11'  // used to trick browser's cache into loading the file every time.  Appended
 // to the file names of assets.  Change this with each new upload to servers.
 
 
-var jsonLevelMaps = ['jsonMapLevel1', 'jsonMapLevel2', 'jsonMapLevel3', 'jsonMapLevel4'];
-var backgrounds = ['jungleBG', 'jungleBG', 'jungleBG', 'blackSquare'];
-var music = ['reggae', 'reggae', 'reggae', 'ghostMusic'];
+var jsonLevelMaps = ['jsonMapLevel1', 'jsonMapLevel2', 'jsonMapLevel3', 'jsonMapLevel4', 'jsonMapLevel5'];
+var backgrounds = ['landBG', 'jungleBG', 'jungleBG', 'blackSquare', 'blackSquare'];
+var music = ['reggae', 'reggae', 'reggae', 'ghostMusic', 'ghostMusic'];
 
 
 /**

@@ -12,22 +12,24 @@ var playState = {
         
         this.level_index = level_index
         this.leveldata = gameData[level_index];
-//        this.enemyDataForThisLevel = enemyDataForLevel[level_index];
         this.lives = lives;
         this.coins = coins;
         this.coinsNeededForExtraLife = 99
         game.time.reset();
         this.enemyStack = [];
         this.gravity = 2000
+        this.maxSpeed = 250;
     },
     
     create: function() {
+
+
         
         // Basic level setup
-        game.world.setBounds(0, 0, this.leveldata.map_width, 
-            this.leveldata.map_height);
-        this.background = game.add.tileSprite(0, 0, this.leveldata.map_width, 
-            this.leveldata.map_height, backgrounds[this.level_index]);
+        game.world.setBounds(0, 0, this.leveldata['map_width'], 
+            this.leveldata['map_height']);
+        this.background = game.add.tileSprite(0, 0, this.leveldata['map_width'], 
+            this.leveldata['map_height'], backgrounds[this.level_index]);
         game.sound.play(music[this.level_index], 8, true);
         game.physics.arcade.gravity.y = this.gravity;
         
@@ -46,8 +48,8 @@ var playState = {
             
         
         // Create Krystal
-        this.krystal = game.add.sprite(this.leveldata.krystal_loc[0][0],  
-            this.leveldata.krystal_loc[0][1], 'krystalatlas');
+        this.krystal = game.add.sprite(this.leveldata['krystal'][1][0][0],  
+            this.leveldata['krystal'][1][0][1], 'krystalatlas');
         this.krystal.anchor.setTo(0.5, 0.5);
         this.krystal.animations.add('dizzy', [0, 1]);
         this.krystal.animations.add('balloon', [2, 7]);
@@ -67,6 +69,18 @@ var playState = {
         game.physics.enable(this.krystal);
         this.krystal.body.immovable = true;
         game.camera.follow(this.krystal);
+
+
+        // create emmitter for Krystal's exploding death
+        emitter = game.add.emitter(0, 0, 1000);
+        emitter.makeParticles('star');
+        emitter.gravity = -2000;
+
+
+        // moved this layer to be rendered after Krystal to avoid the weird 
+        // visual when she falls in water.
+        this.layer = this.map.createLayer('collidableTerrain');
+        this.map.setCollisionByExclusion([0], true, 'collidableTerrain');
 
         // Setup Krystal's fireballs
         this.krystal.hasFireballs = false;
@@ -96,13 +110,14 @@ var playState = {
         this.balloonGroup = game.add.group();
         this.ghostGroup = game.add.group();
         this.fireballGroup = game.add.group();
+        this.spikesGroup = game.add.group();
         
 
         // Spawn fireball item
         var newfireball;
-        for (i=0; i < this.leveldata.fireball_loc.length; ++i){
-            newfireball = game.add.sprite(this.leveldata.fireball_loc[0][0],  
-                this.leveldata.fireball_loc[0][1], 'fireball');
+        for (i=0; i < this.leveldata['fireball'][1].length; ++i){
+            newfireball = game.add.sprite(this.leveldata['fireball'][1][i][0],  
+                this.leveldata['fireball'][1][i][1], 'fireball');
             game.physics.enable(newfireball);
             newfireball.body.immovable = true;
             newfireball.body.allowGravity = false;
@@ -112,7 +127,7 @@ var playState = {
         
         
         // Spawn balloon item
-        this.balloon_locs = this.leveldata.balloon_locs;
+        this.balloon_locs = this.leveldata['balloon'][1];
         var newballoon;
         for (i=0; i < this.balloon_locs.length; ++i){
             newballoon = game.add.sprite(this.balloon_locs[i][0], this.balloon_locs[i][1], 'balloon');
@@ -125,35 +140,50 @@ var playState = {
         
         
         // Spawn coins
-        this.coin_locs = this.leveldata.coin_locs;
+        this.coin_locs = this.leveldata['coins'][1];
         var newcoin;
         for (i=0; i < this.coin_locs.length; ++i){
             newcoin = game.add.sprite(this.coin_locs[i][0], 
                 this.coin_locs[i][1], 'gameCoin');
             game.physics.enable(newcoin);
-            newcoin.body.setSize(30, 30, 12, 12);
+            newcoin.body.setSize(35, 35, 20, 20);
             newcoin.body.allowGravity = false;
             newcoin.body.immovable = true;
             game.add.existing(newcoin);
             this.coinGroup.add(newcoin);
         };
+
+
+        // Spawn spikes
+        this.spike_locs = this.leveldata['spikes'][1];
+        var newspike
+        for (i=0; i < this.spike_locs.length; ++i){
+            newspike = game.add.sprite(this.spike_locs[i][0],
+                this.spike_locs[i][1], 'spikes')
+            game.physics.enable(newspike);
+            newspike.body.setSize(64, 32, 0, 32);
+            newspike.body.allowGravity = false;
+            newspike.body.immovable = true;
+            game.add.existing(newspike);
+            newspike.scale.y = -1;
+            this.spikesGroup.add(newspike);
+        }
         
         
         // Spawn key
-        if (this.leveldata.key_loc.length > 0){
-            this.key = game.add.sprite(this.leveldata.key_loc[0][0],
-                this.leveldata.key_loc[0][1], 'itemsAtlas', 'keyBlue');
+        if (this.leveldata['key'][1].length > 0){
+            this.key = game.add.sprite(this.leveldata['key'][1][0][0],
+                this.leveldata['key'][1][0][1], 'itemsAtlas', 'keyBlue'); 
+            game.physics.enable(this.key);
+            this.key.body.setSize(40, 20, 12, 22);
+            this.key.body.allowGravity = false;
+            this.key.body.immovable = true;
+            game.add.existing(this.key);
         }
-        game.physics.enable(this.key);
-        this.key.body.setSize(40, 20, 12, 22);
-        this.key.body.allowGravity = false;
-        this.key.body.immovable = true;
-        game.add.existing(this.key);
-        
         
         
         // Spawn bees
-        this.bee_locs = this.leveldata.bee_locs;
+        this.bee_locs = this.leveldata['bees'][1];
         var newbee;
         for (i=0; i < this.bee_locs.length; ++i){
             newbee = new Bee(game, this.bee_locs[i][0], this.bee_locs[i][1]);
@@ -165,7 +195,7 @@ var playState = {
         
         
         // Spawn ghosts
-        this.ghost_locs = this.leveldata.ghost_locs;
+        this.ghost_locs = this.leveldata['ghost'][1];
         var newghost;
         for (i=0; i < this.ghost_locs.length; ++i){
             newghost = new Ghost(game, this.ghost_locs[i][0], this.ghost_locs[i][1]);
@@ -176,7 +206,7 @@ var playState = {
         
         
         // Spawn ladybugs
-        this.ladybug_locs = this.leveldata.ladybug_locs;
+        this.ladybug_locs = this.leveldata['ladybugs'][1];
         var new_ladybug;
         for (i=0; i < this.ladybug_locs.length; ++i){
             new_ladybug = new Ladybug(game, this.ladybug_locs[i][0], this.ladybug_locs[i][1]);
@@ -187,7 +217,7 @@ var playState = {
         
         
         // Spawn blockers to keep patrolling enemies from falling off ledges
-        this.blocker_locs = this.leveldata.blocker_locs;      
+        this.blocker_locs = this.leveldata['blockers'][1];      
         var new_blocker;
         for (i=0; i < this.blocker_locs.length; ++i){
             blocker = game.add.sprite(this.blocker_locs[i][0], 
@@ -201,7 +231,7 @@ var playState = {
         
         
         // Spawn piranhas
-        this.piranha_locs = this.leveldata.piranha_locs;
+        this.piranha_locs = this.leveldata['piranhas'][1];
         var new_piranha;
         for (i=0; i < this.piranha_locs.length; ++i){
             new_piranha = new Piranha(game, this.piranha_locs[i][0], this.piranha_locs[i][1]);
@@ -212,7 +242,7 @@ var playState = {
         
         
         // Spawn bats
-        this.bat_locs = this.leveldata.bat_locs;
+        this.bat_locs = this.leveldata['bats'][1];
         var new_bat;
         for (i=0; i < this.bat_locs.length; ++i){
             new_bat = new Bat(game, this.bat_locs[i][0], this.bat_locs[i][1]);
@@ -223,7 +253,7 @@ var playState = {
         
         
         // Spawn frogs
-        this.frog_locs = this.leveldata.frog_locs;
+        this.frog_locs = this.leveldata['frogs'][1];
         var new_frog;
         for (i=0; i < this.frog_locs.length; ++i){
             new_frog = new Frog(game, this.frog_locs[i][0], this.frog_locs[i][1]);
@@ -234,39 +264,29 @@ var playState = {
         
         
         // Spawn alien (boss), and attach his raygun
-        if (this.leveldata.alien_loc.length > 0){
-            this.alien_loc = this.leveldata.alien_loc;
-            this.alien = new Alien(game, this.alien_loc[i][0], this.alien_loc[i][1]);
+        if (this.leveldata['alien'][1].length > 0){
+            this.alien_loc = this.leveldata['alien'][1];
+            this.alien = new Alien(game, this.alien_loc[0][0], this.alien_loc[0][1]);
             game.add.existing(this.alien);
-            // this.raygun = game.add.sprite(10, 20, 'raygun');
-            // this.alien.addChild(this.raygun); 
-            // this.alienweapon = game.add.weapon(1, 'laser');
-            // this.alienweapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-            // this.alienweapon.bulletSpeed = 600;
-            // this.alienweapon.trackSprite(this.raygun, -70, 32, false);
-            // this.alienweapon.autofire = true;
-            // this.alienweapon.bulletGravity.y = -1 * this.gravity;
-            // this.alienweapon.fireRate = 2000;
-            // this.alienweapon.fireAngle = Phaser.ANGLE_LEFT;
-            // this.alienweapon.setBulletBodyOffset(30, 10, 18, 30);
-
         }
         
         
-        
         // Spawn exit
-        this.exit = game.add.sprite(this.leveldata.exit[0][0], this.leveldata.exit[0][1], 'exit');
-        game.physics.enable(this.exit);
-        this.exit.body.immovable = true;
-        this.exit.alpha = 0;
-        this.exit.body.allowGravity = false;
+        if (this.leveldata['exit'][1].length > 0){
+            this.exit = game.add.sprite(this.leveldata['exit'][1][0][0], this.leveldata['exit'][1][0][1], 'exit');
+            game.physics.enable(this.exit);
+            this.exit.body.immovable = true;
+            this.exit.alpha = 0;
+            this.exit.body.allowGravity = false;
+        }
+        
         
 
         
         // Create this layer last, so it is rendered over everything else
         this.layer3 = this.map.createLayer('nonCollidableInFront');
 
-        
+
         /**
          * HUD section.  Creates icons and numbers showing coins collected
          * and time expired, and animates them.  The ones digit turns every 
@@ -331,6 +351,10 @@ var playState = {
         spacebar = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
         spacebar.onDown.add(this.launchFireball, this);
 
+
+
+        
+
         
         // create boolean triggers for button states to be used on mobile
         // because unlike the spacebar on desktop, buttons only send out
@@ -342,17 +366,20 @@ var playState = {
         
         
         // create buttons only if the device is iOS
-        this.buttonHeight = gameHeight - 102;
+        this.buttonHeight = gameHeight - 90;
         
-        if (game.device.iOS === true){
-            this.left = game.add.button(10, this.buttonHeight, 'left', this.moveLeft, this);
-            this.left.fixedToCamera = true;
-            this.left.onInputDown.add(this.leftDown, this);
-            this.left.onInputUp.add(this.leftUp, this);
-            this.right = game.add.button(110, this.buttonHeight, 'right', this.moveRight, this);
-            this.right.fixedToCamera = true;
-            this.right.onInputDown.add(this.rightDown, this);
-            this.right.onInputUp.add(this.rightUp, this);
+        if (game.device.iOS || game.device.android){
+
+            //joystick section
+            this.pad = this.game.plugins.add(Phaser.VirtualJoystick);
+            this.stick = this.pad.addStick(0, 0, 100, 'joystick', 
+                'stick', 'stick', 'stick', 'stick', 'stick');
+            this.stick.alignBottomLeft(0);
+            this.stick.motionLock = Phaser.VirtualJoystick.HORIZONTAL;
+            
+
+
+            //button section
             this.jump = game.add.button(700, this.buttonHeight, 'A', this.jumpUp, this);
             this.jump.fixedToCamera = true;
             this.jump.onInputDown.add(this.jumpDown, this);
@@ -365,6 +392,10 @@ var playState = {
             this.special.onInputDown.add(this.specialDown, this)  // Calls function to set boolean to true
             this.special.onInputDown.add(this.launchFireball, this);
             this.special.onInputUp.add(this.specialUp, this)
+
+
+            
+
         }
         
     },
@@ -446,29 +477,25 @@ var playState = {
         
         
         
-        // Update coins.  'this.coinArray' holds the ones value and tens value.  
-        // The modulus math is to parse those values.
-        this.coinArray = [(this.coins % 10), ((this.coins - (this.coins % 10)) / 10)];
-        this.coinOnes.frame = this.coinArray[0]
-        this.coinTens.frame = this.coinArray[1]
+        
+        
         
         
         if(game.time.totalElapsedSeconds() > this.clock){
             this.krystalDie(this.krystal, null);
         }
-
-
         
         
         // Move Krystal and check for collision
         game.physics.arcade.collide(this.krystal, this.layer);
         game.physics.arcade.collide(this.krystal, this.coinGroup, this.takeCoin);
+        game.physics.arcade.collide(this.krystal, this.spikesGroup, this.krystalDie);
         game.physics.arcade.collide(this.krystal, this.key, this.takeKey);
         game.physics.arcade.collide(this.krystal, this.balloonGroup, this.getBalloon);
         game.physics.arcade.collide(this.krystal, this.fireballGroup, this.pickupFireball);
         game.physics.arcade.collide(this.krystal, this.coinBoxGroup)
-        game.physics.arcade.overlap(this.krystal, this.ladybugGroup, this.stompHandler);
         game.physics.arcade.collide(this.ladybugGroup, this.layer);
+        game.physics.arcade.overlap(this.krystal, this.ladybugGroup, this.stompHandler);
         game.physics.arcade.collide(this.frogGroup, this.layer);
         game.physics.arcade.collide(this.krystal, this.beesGroup, this.krystalDie);
         game.physics.arcade.collide(this.krystal, this.piranhaGroup, this.krystalDie);
@@ -488,12 +515,23 @@ var playState = {
             game.physics.arcade.collide(this.krystal, this.alien.alienweapon.bullets, this.krystalDie);   
         }
         
-        
-        // Avoid updating if Krystal is not alive, as this will result
-        // in sounds being played twice.
+
+        // Avoid updating furth if Krystal is not alive, as this will result
+        // in sounds being played twice.  Don't put it above collision checks, otherwise
+        // other game objects will stop checking for collision and fall through the 
+        // floor when Krystal dies.
         if(this.krystal.alive === false){
             return;
         }
+        
+
+        // Update coins.  'this.coinArray' holds the ones value and tens value.  
+        // The modulus math is to parse those values.
+        this.coinArray = [(this.coins % 10), ((this.coins - (this.coins % 10)) / 10)];
+        this.coinOnes.frame = this.coinArray[0]
+        this.coinTens.frame = this.coinArray[1]
+        
+        
         
 
         // Recalc velocities
@@ -531,6 +569,24 @@ var playState = {
         }
 
         
+        // handle joypad on mobile
+        if (game.device.iOS || game.device.android){
+            if (this.stick.isDown){
+            this.krystal.body.velocity.x = Math.ceil(this.stick.forceX) * this.maxSpeed;
+            } else {
+            this.krystal.body.velocity.x = 0;
+            }
+
+            if (this.krystal.body.velocity.x > 0){
+            this.krystal.scale.x = 1;
+            }
+            if (this.krystal.body.velocity.x < 0){
+            this.krystal.scale.x = -1;
+            }
+        };
+        
+
+
         // Set animation frames
       
         if (this.krystal.body.velocity.y !== 0){
@@ -584,6 +640,9 @@ var playState = {
         this.ghostGroup.forEach(function(item) {
             item.attack(this.krystal);
         }, this);
+
+
+        
         
         
     },
@@ -656,13 +715,14 @@ var playState = {
             obj2.deathMarch();
             krystal.body.velocity.y = -350;
         } else {
-            playState.krystalDie(krystal);
+            playState.krystalDie(krystal, obj2);
         };
     },
 
     reload: function(){
         game.sound.stopAll();
         playState.lives -= 1;
+
         if (playState.lives === 0){
             game.state.start('gameOver');
         }else{
@@ -672,24 +732,27 @@ var playState = {
     },
 
     krystalDie: function(krystal, obj2){
+
         if (krystal.alive === true){
-            game.sound.stopAll();            
-            krystal.alive = false;           
-            krystal.body.allowGravity = false;           
+            game.sound.stopAll(); 
+            krystal.visible = false;
+            krystal.body.enable = false;
             krystal.body.velocity.x = 0;
             krystal.body.velocity.y = 0;
-            this.background = game.add.tileSprite(0, 0, playState.leveldata.map_width, 
-            playState.leveldata.map_width, 'redSquare');
-            krystal.bringToTop();
-            game.stage.backgroundColor = 'rgb(255, 0, 0)';
-            krystal.animations.stop();
-            krystal.animations.play('die', 10, false, true);
+            krystal.body.allowGravity = false;
+
+            emitter.x = krystal.body.position.x;
+            emitter.y = krystal.body.position.y;
+            emitter.minParticleSpeed.setTo(-400, -400);
+            emitter.start(true, 4000, null, 100);
             game.sound.play('lose', 1, false);
-            if (!!obj2){
-                obj2.alive = false;
-                obj2.bringToTop();
-                obj2.body.allowGravity = false;
-            }          
+
+            krystal.alive = false; 
+            game.time.events.add(2000, playState.reload, this);
+
+            
+            
+
         } 
     },
     
@@ -734,7 +797,7 @@ var playState = {
     
     render: function() {
         
-       // this.fireballGroup.forEach(function(item) {
+       // this.spikesGroup.forEach(function(item) {
        //     game.debug.body(item);
        // }, this);
        // this.fireballs.bullets.forEach(function(item) {
@@ -743,7 +806,10 @@ var playState = {
 ////     
 //        
 ////      
-//          game.debug.body(this.alien);
+         // game.debug.body(this.left);
+         // game.debug.body(this.right);
+         // game.debug.body(this.jump);
+         // game.debug.body(this.special);
        // game.debug.bodyInfo(this.krystal, 0, 100);
 //          
 //        game.debug.text('Loop Count: ' + this.clock, 32, 64);

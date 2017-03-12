@@ -14,15 +14,14 @@ var loadState = {
         this.krystalPreload = game.add.sprite(10, 30, 'krystal_single')
         this.load.setPreloadSprite(this.preloadBar);
 
+
+
+
         // Load Tilemaps
-        game.load.tilemap('jsonMapLevel1', 'levelData/level_1.json' + version, 
+        for (i=1; i < 6; ++i){
+            game.load.tilemap('jsonMapLevel' + i, 'levelData/level_' + i + '.json' + version, 
             null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('jsonMapLevel2', 'levelData/level_2.json' + version, 
-            null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('jsonMapLevel3', 'levelData/level_3.json' + version, 
-            null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('jsonMapLevel4', 'levelData/level_4.json' + version, 
-            null, Phaser.Tilemap.TILED_JSON);
+        }
       
         
         // Load Images
@@ -33,6 +32,7 @@ var loadState = {
         game.load.image('graveYardBG', 'assets/backgrounds/graveYardBG.png' + version);
         game.load.image('snowyBG', 'assets/backgrounds/snowyBG.png' + version);
         game.load.image('iceBG', 'assets/backgrounds/iceBG.png' + version);
+        game.load.image('landBG', 'assets/backgrounds/landBG.png' + version);
         game.load.image('blocker', 'assets/singleSprites/blocker.png' + version);  // invisible sprite to block patrolling enemies
         game.load.image('balloon', 'assets/singleSprites/balloon.png' + version);
         game.load.image('clock', 'assets/singleSprites/clock.png' + version);
@@ -42,12 +42,12 @@ var loadState = {
         game.load.image('exit', 'assets/singleSprites/signExit.png' + version);// image is arbitrary, will be invisible, used to trigger level exit callback
         game.load.image('smallCoin', 'assets/HUD/smallCoin.png' + version); // coin that's part of the display
         game.load.image('gameCoin', 'assets/HUD/coinGold.png' + version);  // actual coins in the game
-        game.load.image('left', 'assets/buttons/left.png' + version);
-        game.load.image('right', 'assets/buttons/right.png' + version);
-        game.load.image('A', 'assets/buttons/A.png' + version);
-        game.load.image('B', 'assets/buttons/B.png' + version);
+        game.load.image('A', 'assets/buttons/A_.png' + version);
+        game.load.image('B', 'assets/buttons/B_.png' + version);
         game.load.image('raygun', 'assets/singleSprites/raygunPurple.png' + version);
         game.load.image('laser', 'assets/singleSprites/laserPurple.png' + version);
+        game.load.image('spikes', 'assets/singleSprites/spikes.png' + version);
+        game.load.image('star', 'assets/singleSprites/star.png' + version);
 
         
         
@@ -68,7 +68,8 @@ var loadState = {
             'assets/atlases/alien.json' + version, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
         game.load.atlas('fireball', 'assets/atlases/fireballs.png' + version,
             'assets/atlases/fireballs.json' + version, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
-            
+        game.load.atlas('joystick', 'assets/atlases/joystick.png' + version,
+            'assets/atlases/joystick.json' + version, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);            
         
         // Load Audio
         game.load.audio('reggae', 'assets/sounds/Retro Reggae.ogg' + version);

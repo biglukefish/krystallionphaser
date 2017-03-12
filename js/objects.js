@@ -262,7 +262,7 @@ Alien.prototype.notHit = function(){
 Alien.prototype.update = function(){
 
     this.counter += 1;
-    console.log(this.health)
+
 
     if (this.alive === true){
 
